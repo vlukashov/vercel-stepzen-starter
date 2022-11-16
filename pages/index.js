@@ -16,6 +16,18 @@ export default function Home() {
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
+        <p>
+          <a href="https://stepzen.com" target="_blank" rel="noreferrer">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt="StepZen"
+              height="36"
+              width="144"
+              src="//stepzen.com/images/logo.svg"
+            />
+          </a>
+        </p>
+
         <p className={styles.description}>
           Get started by editing{" "}
           <code className={styles.code}>pages/index.js</code>
