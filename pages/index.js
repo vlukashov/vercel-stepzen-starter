@@ -1,8 +1,34 @@
 import Head from "next/head";
 import Image from "next/image";
+import { createGraphiQLFetcher } from "@graphiql/toolkit";
+import { GraphiQL } from "graphiql";
+import { useEffect, useState } from "react";
+
 import styles from "../styles/Home.module.css";
 
+const STEPZEN_ENDPOINT = process.env.STEPZEN_ENDPOINT;
+const STEPZEN_API_KEY = process.env.STEPZEN_API_KEY;
+
+const defaultQuery = /* GraphQL */ `
+  {
+    szHealthCheck
+  }
+`;
+
 export default function Home() {
+  const [fetcher, setFetcher] = useState();
+  useEffect(() => {
+    setFetcher(() =>
+      createGraphiQLFetcher({
+        url: STEPZEN_ENDPOINT,
+        headers: {
+          "content-type": "application/json",
+          authorization: `apikey ${STEPZEN_API_KEY}`,
+        },
+      })
+    );
+  }, []);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -33,35 +59,16 @@ export default function Home() {
           <code className={styles.code}>pages/index.js</code>
         </p>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
+        {fetcher ? (
+          <div
+            style={{
+              width: "100%",
+              maxWidth: "1233px",
+            }}
           >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+            <GraphiQL fetcher={fetcher} defaultQuery={defaultQuery} />
+          </div>
+        ) : null}
       </main>
 
       <footer className={styles.footer}>
