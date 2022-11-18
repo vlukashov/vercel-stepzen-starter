@@ -1,7 +1,6 @@
 schema:
   - https://stepzen.stepzen.net/directives.graphql
-  - ${STEPZEN_ENDPOINT}:
+  - https://${STEPZEN_ACCOUNT}.stepzen.net/api/vercel/__graphql:
       headers:
         Authorization: apikey ${STEPZEN_API_KEY}
-  # - http://localhost:5001/api/vercel
 documents: "pages/**/*.{graphql,js,ts,jsx,tsx}"

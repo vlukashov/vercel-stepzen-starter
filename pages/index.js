@@ -6,27 +6,25 @@ import { useEffect, useState } from "react";
 
 import styles from "../styles/Home.module.css";
 
-const STEPZEN_ENDPOINT = process.env.STEPZEN_ENDPOINT;
-const STEPZEN_API_KEY = process.env.STEPZEN_API_KEY;
-
+// Check out README to learn how to enable code completion for GraphQL queries
 const defaultQuery = /* GraphQL */ `
   {
-    szHealthCheck
+    gitHubStatus {
+      status {
+        indicator
+        description
+      }
+    }
   }
 `;
 
 export default function Home() {
   const [fetcher, setFetcher] = useState();
   useEffect(() => {
-    setFetcher(() =>
-      createGraphiQLFetcher({
-        url: STEPZEN_ENDPOINT,
-        headers: {
-          "content-type": "application/json",
-          authorization: `apikey ${STEPZEN_API_KEY}`,
-        },
-      })
-    );
+    // Initialise the GraphiQL fetcher inside a "run after the first render"
+    // effect to make sure the first-render DOM on the client-side matches
+    // the server-side rendered DOM. This helps to avoid hydration issues.
+    setFetcher(() => createGraphiQLFetcher({ url: "/api/graphql" }));
   }, []);
 
   return (
@@ -43,7 +41,11 @@ export default function Home() {
         </h1>
 
         <p>
-          <a href="https://stepzen.com" target="_blank" rel="noreferrer">
+          <a
+            href="https://stepzen.com?utm_source=stepzen-vercel-starter-template"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               alt="StepZen"
@@ -64,6 +66,7 @@ export default function Home() {
             style={{
               width: "100%",
               maxWidth: "1233px",
+              height: "370px",
             }}
           >
             <GraphiQL fetcher={fetcher} defaultQuery={defaultQuery} />
